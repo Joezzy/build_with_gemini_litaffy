@@ -20,13 +20,12 @@ abstract class AuthService {
   Future<Response> changePassword(dynamic email);
 }
 
+
 class ApiServiceImpl implements AuthService {
   // for authentication
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  //  FirebaseAuth auth = FirebaseAuth.instance;
 
-  // for accessing cloud firestore database
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   // for accessing firebase storage
@@ -37,79 +36,8 @@ class ApiServiceImpl implements AuthService {
   // // for storing self information
   CurrentUser me = CurrentUser();
 
-  // for accessing firebase messaging (Push Notification)
   FirebaseMessaging fMessaging = FirebaseMessaging.instance;
 
-  //  Future<void> createProduct(Product product,File file) async {
-  //   final time = DateTime.now().millisecondsSinceEpoch.toString();
-  //   return await firestore.collection('products')
-  //       .doc("user.uid")
-  //       .set(product.toJson());
-  // }
-
-  // Future <List<Product>> getProduct() async{
-  //   final prod= await firestore
-  //       .collection("products")
-  //       .orderBy('sent', descending: true)
-  //       .get();
-  //   List<Product> list= prod.docs.map((doc) => Product.fromSnapShot(doc)).toList();
-  //   return list;
-  //
-  // }
-
-  // for getting firebase messaging token
-  //  Future<void> getFirebaseMessagingToken() async {
-  //   await fMessaging.requestPermission();
-  //
-  //   await fMessaging.getToken().then((t) {
-  //     if (t != null) {
-  //       me.pushToken = t;
-  //       log('Push Token: $t');
-  //     }
-  //   });
-  //
-  //   // for handling foreground messages
-  //   // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //   //   log('Got a message whilst in the foreground!');
-  //   //   log('Message data: ${message.data}');
-  //
-  //   //   if (message.notification != null) {
-  //   //     log('Message also contained a notification: ${message.notification}');
-  //   //   }
-  //   // });
-  // }
-
-  // for sending push notification
-  //  Future<void> sendPushNotification(
-  //     CurrentUser CurrentUser, String msg) async {
-  //   try {
-  //     final body = {
-  //       "to": CurrentUser.pushToken,
-  //       "notification": {
-  //         "title": me.name, //our name should be send
-  //         "body": msg,
-  //         "android_channel_id": "chats"
-  //       },
-  //       // "data": {
-  //       //   "some_data": "User ID: ${me.id}",
-  //       // },
-  //     };
-  //
-  //     var res = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-  //         headers: {
-  //           HttpHeaders.contentTypeHeader: 'application/json',
-  //           HttpHeaders.authorizationHeader:
-  //           'key=AAAAQ0Bf7ZA:APA91bGd5IN5v43yedFDo86WiSuyTERjmlr4tyekbw_YW6JrdLFblZcbHdgjDmogWLJ7VD65KGgVbETS0Px7LnKk8NdAz4Z-AsHRp9WoVfArA5cNpfMKcjh_MQI-z96XQk5oIDUwx8D1'
-  //         },
-  //         body: jsonEncode(body));
-  //     log('Response status: ${res.statusCode}');
-  //     log('Response body: ${res.body}');
-  //   } catch (e) {
-  //     log('\nsendPushNotificationE: $e');
-  //   }
-  // }
-
-  // for checking if user exists or not?
   Future<bool> userExists() async {
     return (await firestore
             .collection('users')
@@ -118,7 +46,6 @@ class ApiServiceImpl implements AuthService {
         .exists;
   }
 
-  // for adding an chat user for our conversation
 
   // for getting current user info
   Future<dynamic> getSelfInfo() async {
@@ -162,28 +89,6 @@ class ApiServiceImpl implements AuthService {
         .update(currentUser.toMap());
   }
 
-  // update profile picture of user
-  //  Future<void> updateProfilePicture(File file) async {
-  //   //getting image file extension
-  //   final ext = file.path.split('.').last;
-  //   log('Extension: $ext');
-  //   //storage file ref with path
-  //   final ref = storage.ref().child('profile_pictures/${user.uid}.$ext');
-  //   //uploading image
-  //   await ref
-  //       .putFile(file, SettableMetadata(contentType: 'image/$ext'))
-  //       .then((p0) {
-  //     log('Data Transferred: ${p0.bytesTransferred / 1000} kb');
-  //   });
-  //
-  //   var image = await ref.getDownloadURL();
-  //   await firestore
-  //       .collection('users')
-  //       .doc(user.uid)
-  //       .update({'image': image});
-  // }
-
-  // for getting specific user info
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
       CurrentUser CurrentUser) {
@@ -202,23 +107,6 @@ class ApiServiceImpl implements AuthService {
     });
   }
 
-  //
-  // ///************** Chat Screen Related APIs **************
-  //
-  // // chats (collection) --> conversation_id (doc) --> messages (collection) --> message (doc)
-  //
-  // // useful for getting conversation id
-  // String getConversationID(String id) => user.uid.hashCode <= id.hashCode
-  //     ? '${user.uid}_$id'
-  //     : '${id}_${user.uid}';
-  //
-  // // for getting all messages of a specific conversation from firestore database
-  // Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(CurrentUser user) {
-  //   return firestore
-  //       .collection('chats/${getConversationID(user.id!)}/messages/')
-  //       .orderBy('sent', descending: true)
-  //       .snapshots();
-  // }
 
   Future updateProfilePicture(Uint8List file) async {
     Reference ref = storage.ref().child(user.uid);
